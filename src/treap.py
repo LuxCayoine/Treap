@@ -57,9 +57,10 @@ class Treap_node(object):
 
 class Treap(object):
 
-	def __init__(self):
+	def __init__(self, handles = False):
 		self.root = None
 		self.size = 0
+		self.handles = handles
 
 	def find(self, key):
 		current = self.root
@@ -84,7 +85,8 @@ class Treap(object):
 			current = self.root
 			count = 0
 			while True:
-				count += 1
+				if not self.handles:
+					count += 1
 				if node.key > current.key:
 					if current.right is not None:
 						current = current.right
@@ -124,6 +126,8 @@ class Treap(object):
 			pass
 		else:
 			count,node = self.find(key)
+			if self.handles:
+				count = 0
 			isRoot = False
 			if node is self.root:
 				isRoot = True
@@ -175,7 +179,8 @@ def main():
 	delete = [0]*len(keys)
 	n = 1000
 	for i in range(n):
-		treap = Treap()
+		treap = Treap(True)
+		# treap = Treap()
 		random.shuffle(keys)
 		for i,key in enumerate(keys):
 			add[i]+=treap.insert(Treap_node(key = key))
