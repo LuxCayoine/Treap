@@ -1,4 +1,6 @@
 import random
+import math
+from harm import*
 
 PRIORITY_SIZE = 0x7fffffff
 
@@ -173,24 +175,41 @@ class Treap(object):
 			return count+1
 
 def main():
-	keys = list(range(1,2**10+1))
+	buildHarmonique(2000)
+	keys = list(range(1,2000))
 	add = [0]*len(keys)
 	find = [0]*len(keys)
+	find1 = [0]*len(keys)
+	find2 = [0]*len(keys)
+	find3 = [0]*len(keys)
+	find4 = [0]*len(keys)
 	delete = [0]*len(keys)
+	addT = [0]*len(keys)
+	deleteT = [0]*len(keys)
 	n = 1000
+	random.shuffle(keys)
 	for i in range(n):
-		treap = Treap(True)
-		# treap = Treap()
-		random.shuffle(keys)
+		treapT = Treap(True)
+		treap = Treap()
 		for i,key in enumerate(keys):
+			addT[i]+=treapT.insert(Treap_node(key = key))
 			add[i]+=treap.insert(Treap_node(key = key))
+			s = sorted(keys[:i+1])
+			find1[i]+=treap.find(s[i//10])[0]
+			find2[i]+=treap.find(s[i//4])[0]
+			find3[i]+=treap.find(s[i//2])[0]
 			find[i]+=treap.find(keys[random.randint(0,i)])[0]
 
-		random.shuffle(keys)
 		for i,key in enumerate(keys):
 			delete[len(keys)-1-i]+=treap.delete(key)
+			deleteT[len(keys)-1-i]+=treapT.delete(key)
+
 	for i in range(len(keys)):
-		res = [str(i),str(add[i]/n),str(find[i]/n),str(delete[i]/n)]
+
+		const1 = H[i//10+1]+H[i*9//10+1]-1
+		const2 = H[i//4+1]+H[i*3//4+1]-1
+		const3 = H[i//2+1]+H[i//2+1]-1
+		res = [str(i),str(addT[i]/n),str(deleteT[i]/n),str(add[i]/n),str(delete[i]),str(find[i]/n),str(find1[i]/n),str(const1),str(find2[i]/n),str(const2),str(find3[i]/n),str(const3)]
 		print("\t".join(res))
 
 if __name__ == '__main__':
