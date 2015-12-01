@@ -51,6 +51,12 @@ class Treap_node(object):
 				parent.right = y
 		return y
 
+	def size(self, p = 0):
+		p+=1
+		l = p if self.left is None else self.left.size(p)
+		r = p if self.right is None else self.right.size(p)
+		return max(l,r)
+
 	def __str__(self):
 		p = "+" if self.parent is not None else "None"
 		l = "+" if self.left is not None else "None"
@@ -63,6 +69,9 @@ class Treap(object):
 		self.root = None
 		self.size = 0
 		self.handles = handles
+
+	def depth(self):
+		return self.root.size()
 
 	def find(self, key):
 		current = self.root
@@ -209,8 +218,27 @@ def main():
 		const1 = H[i//10+1]+H[i*9//10+1]-1
 		const2 = H[i//4+1]+H[i*3//4+1]-1
 		const3 = H[i//2+1]+H[i//2+1]-1
-		res = [str(i),str(addT[i]/n),str(deleteT[i]/n),str(add[i]/n),str(delete[i]),str(find[i]/n),str(find1[i]/n),str(const1),str(find2[i]/n),str(const2),str(find3[i]/n),str(const3)]
+		res = [str(i),str(addT[i]/n),str(deleteT[i]/n),str(add[i]/n),str(delete[i]/n),str(find[i]/n),str(find1[i]/n),str(const1),str(find2[i]/n),str(const2),str(find3[i]/n),str(const3)]
 		print("\t".join(res))
 
+def main1():
+	n = 2000
+	keys = list(range(0,n))
+	j = 1000
+	prob = 0
+	c = 2
+	limit = 2*c*math.log(n)+1
+	const = 2*math.pow((n/math.e),(-c*math.log(c/math.e)))
+	print(limit)
+	for i in range(1,j+1):
+		treap = Treap()
+		for key in enumerate(keys):
+			treap.insert(Treap_node(key=key))
+			# if (i+1)%100000 == 0 or i == 0:
+			# 	print(i+1,treap.depth()/max(1,math.log(i+1)))
+		prob += 1.0 if treap.depth() >= limit else 0.0
+		# print(treap.depth(), limit)
+		print(str(i)+"\t"+str(prob/i)+"\t"+str(const))
+
 if __name__ == '__main__':
-	main()
+	main1()
